@@ -1,0 +1,12 @@
+#! /bin/bash
+
+# (c) Thomas Lange, 2001-2013, lange@debian.org
+
+error=0; trap 'error=$(($?>$error?$?:$error))' ERR # save maximum error code
+
+ifclass GPT-BOOT && {
+    parted /dev/sda disk_toggle pmbr_boot
+    parted /dev/sdb disk_toggle pmbr_boot
+}
+  
+

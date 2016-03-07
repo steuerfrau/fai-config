@@ -1,0 +1,38 @@
+# example of new config file for setup-storage
+#
+# <type> <mountpoint> <size>   <fs type> <mount options> <misc options>
+
+# disklabel:gpt-bios implicitly creates a BIOS boot partition after the here listed
+# partitions. The actual disk will contain one more partition than configured here.
+
+disk_config disk1 disklabel:gpt-bios bootable:1 fstabkey:uuid
+
+primary -        2G            -    - 
+primary -        500G-100%     -    -                 
+
+disk_config disk2 disklabel:gpt-bios bootable:1 fstabkey:uuid
+
+primary -         2G          -    -
+primary -         500G-100%   -    -                 
+
+disk_config raid
+
+raid1   /boot sda1,sdb1 ext4 rw,noatime
+raid1   -     sda2,sdb2 - -
+
+disk_config cryptsetup
+
+luks:"secret" - md1 - -
+# # createopts="−m 0"
+
+disk_config lvm
+
+vg Hoppetosse md1
+Hoppetosse-Root /      2G     ext4 rw
+Hoppetosse-Usr  /usr   4G     ext4 rw
+Hoppetosse-Tmp  /tmp   2G     ext4 rw
+Hoppetosse-Var  /var   3G     ext4 rw
+Hoppetosse-Home /home  5G     ext4 rw
+Hoppetosse-Swap swap   512    swap sw 
+
+

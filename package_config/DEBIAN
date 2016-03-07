@@ -1,0 +1,36 @@
+PACKAGES aptitude I386
+linux-image-686 initramfs-tools
+memtest86+
+
+PACKAGES aptitude CHROOT
+linux-image-686-
+linux-image-amd64-
+
+PACKAGES aptitude AMD64
+linux-image-amd64 initramfs-tools
+memtest86+
+
+PACKAGES aptitude XEN
+linux-image-amd64 initramfs-tools
+
+PACKAGES aptitude DHCPC
+isc-dhcp-client
+
+PACKAGES aptitude GRUB_PC
+grub-pc grub-legacy- lilo-
+
+PACKAGES aptitude CRYPT_BOOT
+mdadm
+cryptsetup 
+cryptsetup-bin
+lvm2
+
+PACKAGES aptitude MEL_PKGS
+man
+screen
+sudo 
+vim
+wget
+
+PACKAGES aptitude DEBIAN_OVS_VLAN_TRUNK
+openvswitch-switch

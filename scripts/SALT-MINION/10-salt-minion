@@ -1,0 +1,10 @@
+#! /bin/bash
+
+# (c) Thomas Lange, 2001-2013, lange@debian.org
+
+error=0; trap 'error=$(($?>$error?$?:$error))' ERR # save maximum error code
+
+ifclass SALT-MINION && {
+    sed -i "s/^\s*\#\s*master:.*/master: mel01deploy02.hoppetosse.loc/" /target/etc/salt/minion 
+}
+

@@ -1,0 +1,32 @@
+# example of new config file for setup-storage
+#
+# <type> <mountpoint> <size>   <fs type> <mount options> <misc options>
+
+disk_config sda disklabel:gpt-bios bootable:2
+primary -         1024  vfat rw         # BIOS Boot partition
+primary /boot/efi 200M  vfat rw         # EFI partition, not necessary for booting from BIOS as I intend to do.
+primary /boot     512-3M    ext4 rw,noatime # Should become RAID later
+primary -         100-5G                    # Biggest part goes through RAID - crypt - LVM
+
+disk_config sdb disklabel:gpt-bios bootable:2
+primary -         1024  vfat rw         # BIOS Boot partition
+primary -         200M  vfat rw         # EFI partition, not necessary for booting from BIOS as I intend to do.
+primary -         512-3M    ext4 rw,noatime # Should become RAID later
+primary -         100-5G 
+
+disk_config raid
+raid1   -         sda2,sdb2
+
+disk_config cryptsetup
+luks /crypt_md0 /dev/md0 -  ext3 defaults,errors=remount-ro createopts="−m 0"
+
+disk_config lvm
+vg Hoppetosse crypt_md0
+Hoppetosse-Root /      2500M ext4 rw
+Hoppetosse-Tmp  /tmp   2500M ext4 rw
+Hoppetosse-Var  /var   3500M ext4 rw
+Hoppetosse-Home /home  4500M ext4 rw
+Hoppetosse-Usr  /usr   4500M ext4 rw
+Hoppetosse-Swap swap   4M    swap sw 
+
+

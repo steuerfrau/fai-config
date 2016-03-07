@@ -1,0 +1,32 @@
+# example of new config file for setup-storage
+#
+# <type> <mountpoint> <size>   <fs type> <mount options> <misc options>
+
+disk_config disk1 disklabel:msdos bootable:1 fstabkey:uuid
+
+primary -        512           -    - 
+primary -        1500M-100%    -    -                 
+
+disk_config disk2 disklabel:msdos bootable:1 fstabkey:uuid
+
+primary -         512          -    -
+primary -         1500M-100%   -    -                 
+
+
+disk_config raid
+raid0   -     sda2,sdb2 - -
+raid1   /boot sda1,sdb1 ext4 rw,noatime
+
+disk_config cryptsetup
+luks:"secret" / md0 ext4 rw,noatime
+# # createopts="−m 0"
+
+
+# disk_config lvm
+# # vg Hoppetosse crypt_md0
+# vg Hoppetosse /dev/md0
+# # vg Hoppetosse raid0
+# Hoppetosse-Root /      1500M ext4 rw
+# Hoppetosse-Swap swap   512    swap sw 
+
+

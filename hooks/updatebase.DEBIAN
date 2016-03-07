@@ -1,0 +1,20 @@
+#! /bin/bash
+
+if [ -n "$APTPROXY" ]; then
+    echo "Acquire::http::Proxy \"$APTPROXY\";" > $target/etc/apt/apt.conf.d/02proxy
+else
+    rm -f $target/etc/apt/apt.conf.d/02proxy
+fi
+
+echo force-unsafe-io > $target/etc/dpkg/dpkg.cfg.d/unsafe-io
+
+ifclass SALT-MINION && {
+    # https does not work, as certificate is not accepted. Check and fix!
+    wget -O - http://repo.saltstack.com/apt/debian/8/amd64/latest/SALTSTACK-GPG-KEY.pub | chroot /target apt-key add -
+    echo "deb http://repo.saltstack.com/apt/debian/8/amd64/latest jessie main" >> /target/etc/apt/sources.list.d/repo_saltstack_com.list
+    chroot /target apt-get update
+}
+# you may want to add i386 arch to amd64 hosts
+# if ifclass AMD64; then
+#     $ROOTCMD dpkg --add-architecture i386
+# fi

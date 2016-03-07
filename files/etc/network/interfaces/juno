@@ -1,0 +1,73 @@
+#c This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# openvswitch-switch.README.Debian
+# auto br0
+allow-ovs br0
+iface br0 inet manual
+    ovs_type OVSBridge
+    ovs_ports eth0 vlan1 vlan110 vlan120
+
+# For DRBD / Corosync
+auto eth1
+iface eth0 inet static
+  address 192.192.130.31
+  netmask 255.255.255.0
+  
+
+auto eth2
+iface eth0 inet static
+  address 192.168.140.31
+  netmask 255.255.255.0
+
+
+# https://pve.proxmox.com/wiki/Open_vSwitch
+# auto eth0
+allow-br0 eth0
+iface eth0 inet manual
+  ovs_bridge br0
+  ovs_type OVSPort
+  ovs_options tag=1 vlan_mode=native-untagged
+  # mel ovs_options vlan_mode=trunk trunks=0,1,110,120
+
+# https://pve.proxmox.com/wiki/Open_vSwitch
+
+# Management VLAN to access switch
+allow-br0 vlan1
+iface vlan1 inet static
+  ovs_type OVSIntPort
+  ovs_bridge br0
+  ovs_options tag=1
+  ovs_extra set interface ${IFACE} external-ids:iface-id=$(hostname -s)-${IFACE}-vif
+  address 10.90.90.31
+  netmask 255.255.255.0
+  
+# Default network
+allow-br0 vlan110
+iface vlan110 inet static
+  ovs_type OVSIntPort
+  ovs_bridge br0
+  ovs_options tag=110
+  ovs_extra set interface ${IFACE} external-ids:iface-id=$(hostname -s)-${IFACE}-vif
+  address 192.168.110.31
+  netmask 255.255.255.0
+  gateway 192.168.110.1 
+
+# Test VLAN
+allow-br0 vlan120
+iface vlan120 inet static
+  ovs_type OVSIntPort
+  ovs_bridge br0
+  ovs_options tag=120
+  ovs_extra set interface ${IFACE} external-ids:iface-id=$(hostname -s)-${IFACE}-vif
+  address 192.168.120.31
+  netmask 255.255.255.0
+  gateway 192.168.120.1 
+
+
